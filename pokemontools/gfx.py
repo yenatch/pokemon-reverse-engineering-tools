@@ -12,6 +12,10 @@ import trainers
 if __name__ != "__main__":
     rom = crystal.load_rom()
 
+def touch(filename, times=None):
+    with file(filename, 'a'):
+        os.utime(filename, times)
+
 def hex_dump(input, debug=True):
     """
     Display hex dump in rows of 16 bytes.
@@ -1470,7 +1474,7 @@ def mass_to_colored_png(debug=False):
                 if debug: print os.path.splitext(name), os.path.join(root, name)
                 if os.path.splitext(name)[1] == '.2bpp':
                     to_png(os.path.join(root, name))
-                    os.utime(os.path.join(root, name), None)
+                    touch(os.path.join(root, name))
 
     # only monster and trainer pics for now
     for root, dirs, files in os.walk('./gfx/pics/'):
@@ -1481,14 +1485,14 @@ def mass_to_colored_png(debug=False):
                     to_png(os.path.join(root, name), None, os.path.join(root, 'normal.pal'))
                 else:
                     to_png(os.path.join(root, name))
-                os.utime(os.path.join(root, name), None)
+                touch(os.path.join(root, name))
 
     for root, dirs, files in os.walk('./gfx/trainers/'):
         for name in files:
             if debug: print os.path.splitext(name), os.path.join(root, name)
             if os.path.splitext(name)[1] == '.2bpp':
                 to_png(os.path.join(root, name))
-                os.utime(os.path.join(root, name), None)
+                touch(os.path.join(root, name))
 
 
 def mass_decompress(debug=False):
@@ -1513,7 +1517,7 @@ def mass_decompress(debug=False):
                 else:
                     with open(os.path.join(root, name), 'rb') as lz: de = Decompressed(lz.read())
                     to_file(os.path.join(root, os.path.splitext(name)[0]+'.2bpp'), de.output)
-                os.utime(os.path.join(root, name), None)
+                touch(os.path.join(root, name))
 
 def append_terminator_to_lzs(directory):
     # fix lzs that were extracted with a missing terminator
